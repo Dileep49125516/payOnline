@@ -62,7 +62,7 @@ router.post("/signUp",async(req,res)=>{
         userId:dbUser._id
     },JWT_SECRET);
 
-    res.status(200).json({
+   return res.status(200).json({
         message:"user created successfully",
         token:token
     })
@@ -72,19 +72,19 @@ router.post("/login", async(req,res)=>{
    const body=req.body;
    const {success} =signInSchema.safeParse(req.body);
    if(!success){
-    res.status(411).json({
+    return res.status(411).json({
         message:"Invalid Inputs"
     });}
     try{
     const user=await User.findOne({username:body.username});
     if(!user){
-     res.status(411).json({
+     return res.status(411).json({
         message:"Username doesn't exist"
      });
     }
     const set=await bcrypt.compare(body.password,user.password);
     if(!set){
-        res.status(411).json({
+        return res.status(411).json({
             message:"Incorrect password"
         });
     }
@@ -95,12 +95,12 @@ router.post("/login", async(req,res)=>{
         JWT_SECRET,
         { expiresIn: "12h" }
     );
-    res.status(200).json({
+    return res.status(200).json({
       message:"Login successfully",
       token:token
     });}
     catch (err) {
-        res.status(500).json({
+       return res.status(500).json({
             message: "Internal server error",
             error: err.message,
         });

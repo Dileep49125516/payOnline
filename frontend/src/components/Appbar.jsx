@@ -112,7 +112,7 @@ export const Appbar = () => {
                 </div>
                 <button onClick={handleImageClick}>
                     <div className="rounded-full h-12 w-12 bg-slate-200 flex justify-center mt-1 mr-2">
-                        <img src={imageUrl || "/path/to/default/image.jpg"} alt="Profile" className="rounded-full h-full w-full object-cover" />
+                        <img src={imageUrl|| " "} alt="Picture" className="rounded-full h-full w-full object-cover" />
                     </div>
                 </button>
             </div>

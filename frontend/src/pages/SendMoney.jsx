@@ -2,12 +2,15 @@ import { useSearchParams,useNavigate } from 'react-router-dom';
 import axios from "axios";
 import { useState } from 'react';
 import { srk } from "../names";
+import {Success} from "../components/Success";
+import {Failure} from "../components/Failure";
 
 export const SendMoney = () => {
     const [searchParams] = useSearchParams();
     const id = searchParams.get("id");
     const name = searchParams.get("name");
     const [amount, setAmount] = useState(0);
+    const [transferStatus,setTransferStatus]=useState({type:""});
     const navigate=useNavigate();
 
     const handleTransfer = async () => {
@@ -20,11 +23,12 @@ export const SendMoney = () => {
                     Authorization: "Bearer " + localStorage.getItem("token")
                 }
             });
-             alert("Transfer successful!");
-             navigate('/dashboard')
+             setTransferStatus({type:"success"});
+             setTimeout(()=>{ navigate('/dashboard')},2000);
+            
         } catch (error) {
             console.error("Transfer failed", error);
-            alert("Transfer failed. Please try again.");
+            setTransferStatus({type:"error"});
         }
     };
 
@@ -64,6 +68,8 @@ export const SendMoney = () => {
                             >
                                 Transfer
                             </button>
+                            {transferStatus.type==="success"&& <Success message={"Transfer Successfull"}/>}
+                            {transferStatus.type==="error"&&<Failure message={"Transfer Failure"}/>}
                         </div>
                     </div>
                 </div>

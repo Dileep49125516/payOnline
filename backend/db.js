@@ -1,6 +1,8 @@
+require("dotenv").config();
 const mongoose=require("mongoose");
+const MONGO_URI = process.env.MONGO_URI;
 
-mongoose.connect("mongodb+srv://burladileepkumar13:Dileep%402004@cluster0.smbswlf.mongodb.net/paytm")
+mongoose.connect(MONGO_URI)
    .then(()=>console.log("MongoDB connected"))
    .catch((error)=>console.log(error));
 

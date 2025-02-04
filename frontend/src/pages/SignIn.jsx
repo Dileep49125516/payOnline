@@ -6,30 +6,39 @@ import { Button } from "../components/Button";
 import { Heading } from "../components/Heading";
 import { InputBox } from "../components/InputBox";
 import { SubHeading } from "../components/SubHeading";
+import { Success } from "../components/Success";
+import { Failure } from "../components/Failure";
 import { srk } from "../names";
 
 export const SignIn = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [loading, setLoading] = useState(false); 
+    const [loading, setLoading] = useState(false);
+    const [statusMessage, setStatusMessage] = useState({ type: "", text: "" });
     const navigate = useNavigate();
 
     const onClick = async () => {
-        setLoading(true); 
+        setLoading(true);
         try {
             const response = await axios.post(`${srk}/api/v1/user/login`, {
-                username: email, 
+                username: email,
                 password: password,
             });
-            if (response.status === 200) { 
+
+            if (response.status === 200) {
                 localStorage.setItem("token", response.data.token);
-                navigate("/dashboard");
+                setStatusMessage({ type: "success", text: "Login successful! Redirecting..." });
+
+                setTimeout(() => navigate("/dashboard"), 1000);
             } else {
-                alert("Invalid credentials");
+                setStatusMessage({ type: "error", text: "Login failed. Please check your credentials." });
             }
         } catch (error) {
             console.error("Login failed", error);
-            alert("Login failed. Please try again.");
+            setStatusMessage({
+                type: "error",
+                text: error.response?.data?.message || "Login failed. Please try again later.",
+            });
         } finally {
             setLoading(false);
         }
@@ -54,6 +63,9 @@ export const SignIn = () => {
                     <div className="pt-4">
                         <Button onClick={onClick} label={loading ? "Signing in..." : "Sign in"} disabled={loading} />
                     </div>
+                    {/* Show Success or Failure Messages */}
+                    {statusMessage.type === "success" && <Success message={statusMessage.text} />}
+                    {statusMessage.type === "error" && <Failure message={statusMessage.text} />}
                     <BottomWarning label={"Don't have an account?"} buttonText={"Sign up"} to={"/"} />
                 </div>
             </div>
